@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaHome, FaBox, FaBriefcase, FaUser, FaCrown } from "react-icons/fa";
 
 const SellerDashboard = () => {
 
@@ -13,24 +14,31 @@ const SellerDashboard = () => {
     alert(name + " clicked");
   };
 
+  // ✅ ICON MAP
+  const icons = {
+    "Dashboard": <FaHome />,
+    "My Products": <FaBox />,
+    "Job Listings": <FaBriefcase />,
+    "Profile Views": <FaUser />,
+    "Membership": <FaCrown />
+  };
+
   return (
     <>
       <style>{`
         body {
           margin: 0;
           font-family: 'Segoe UI', Arial, sans-serif;
-          background: transparent; /* ✅ FIXED (was dark) */
+          background: transparent;
           overflow-x: hidden;
         }
 
-        /* ===== SMOOTH GRADIENT ===== */
         .gradient-bg {
           position: fixed;
           width: 100%;
           height: 100%;
           top: 0;
           left: 0;
-
           background: linear-gradient(
             270deg,
             #00c6ff,
@@ -40,25 +48,19 @@ const SellerDashboard = () => {
             #00ff87,
             #00c6ff
           );
-
           background-size: 600% 600%;
           animation: gradientMove 12s ease infinite;
           z-index: -2;
-          opacity: 1; /* ✅ FIXED (was 0.6) */
         }
 
         @keyframes gradientMove {
           0% { background-position: 0% 50%; }
-          20% { background-position: 50% 100%; }
-          40% { background-position: 100% 50%; }
-          60% { background-position: 50% 0%; }
-          80% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
 
-        /* ===== FLOATING BLOBS ===== */
         .blob {
-          position: fixed; /* ✅ FIXED (was absolute) */
+          position: fixed;
           width: 450px;
           height: 450px;
           border-radius: 50%;
@@ -78,7 +80,6 @@ const SellerDashboard = () => {
           100% { transform: translate(-80px,120px) scale(1); }
         }
 
-        /* Layout */
         .app {
           min-height: 100vh;
           display: flex;
@@ -94,13 +95,11 @@ const SellerDashboard = () => {
           margin-top: 15px;
           backdrop-filter: blur(12px);
           background: rgba(255,255,255,0.12);
-          border-bottom: 1px solid rgba(255,255,255,0.2);
         }
 
         .topbar h2 {
           margin: 0;
           font-size: 30px;
-          color: black;
         }
 
         .search-group {
@@ -114,12 +113,6 @@ const SellerDashboard = () => {
           background: rgba(255,255,255,0.2);
           padding: 5px 10px;
           border-radius: 8px;
-          transition: 0.3s;
-        }
-
-        .search-box:focus-within {
-          box-shadow: 0 0 10px #00c6ff;
-          background: rgba(255,255,255,0.3);
         }
 
         .search-box input {
@@ -142,19 +135,36 @@ const SellerDashboard = () => {
           background: rgba(255,255,255,0.1);
         }
 
+        /* ✅ UPDATED SIDEBAR ITEMS */
         .sidebar li {
           list-style: none;
-          padding: 10px;
+          padding: 12px;
           margin-bottom: 10px;
           cursor: pointer;
-          border-radius: 6px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
           transition: 0.3s;
         }
 
-        .sidebar li:hover,
-        .sidebar li.active {
+        .sidebar li .icon {
+          font-size: 18px;
+          transition: 0.3s;
+        }
+
+        .sidebar li:hover {
           background: rgba(255,255,255,0.3);
-          transform: translateX(5px);
+          transform: translateX(6px);
+        }
+
+        .sidebar li.active {
+          background: rgba(255,255,255,0.4);
+          font-weight: bold;
+        }
+
+        .sidebar li.active .icon {
+          transform: scale(1.2);
         }
 
         .main {
@@ -164,12 +174,8 @@ const SellerDashboard = () => {
         }
 
         .welcome {
-          font-size: 24px;
+          font-size: 34px;
           margin-bottom: 10px;
-        }
-
-        .main .welcome + h2 {
-          color: #fff;
         }
 
         .row {
@@ -180,7 +186,7 @@ const SellerDashboard = () => {
 
         .card {
           flex: 1;
-          min-height: 130px;
+          min-height: 100px;
           padding: 25px;
           border-radius: 12px;
           background: rgba(255,255,255,0.15);
@@ -189,12 +195,12 @@ const SellerDashboard = () => {
           justify-content: space-between;
           align-items: center;
           transition: 0.3s;
+          font-size: 25px;
         }
 
         .card:hover {
           transform: translateY(-8px) scale(1.03);
           box-shadow: 0 0 20px rgba(255,255,255,0.4);
-          background: rgba(255,255,255,0.25);
         }
 
         .icon {
@@ -215,18 +221,16 @@ const SellerDashboard = () => {
           color: #fff;
           font-weight: bold;
           cursor: pointer;
-          transition: 0.3s;
+          font-size: 25px;
         }
 
         .btn:hover {
           background: rgba(255,255,255,0.5);
           box-shadow: 0 0 15px #00c6ff;
-          transform: scale(1.05);
         }
 
       `}</style>
 
-      {/* Background */}
       <div className="gradient-bg"></div>
       <div className="blob"></div>
       <div className="blob"></div>
@@ -236,36 +240,20 @@ const SellerDashboard = () => {
 
         <div className="topbar">
           <h2>Seller Dashboard</h2>
-
-          <div className="search-group">
-            <div className="search-box">🔍
-              <input placeholder="Search 1"
-                value={search.s1}
-                onChange={(e)=>setSearch({...search,s1:e.target.value})}/>
-            </div>
-
-            <div className="search-box">🔍
-              <input placeholder="Search 2"
-                value={search.s2}
-                onChange={(e)=>setSearch({...search,s2:e.target.value})}/>
-            </div>
-
-            <div className="search-box">🔍
-              <input placeholder="Search 3"
-                value={search.s3}
-                onChange={(e)=>setSearch({...search,s3:e.target.value})}/>
-            </div>
-          </div>
-        </div>
+        <div className="search-group"> <div className="search-box">🔍 <input placeholder="Search 1" value={search.s1} onChange={(e)=>setSearch({...search,s1:e.target.value})}/> </div> <div className="search-box">🔍 <input placeholder="Search 2" value={search.s2} onChange={(e)=>setSearch({...search,s2:e.target.value})}/> </div> <div className="search-box">🔍 <input placeholder="Search 3" value={search.s3} onChange={(e)=>setSearch({...search,s3:e.target.value})}/> </div> </div> </div>
 
         <div className="bottom">
 
+          {/* ✅ SIDEBAR WITH ICONS */}
           <ul className="sidebar">
-            {["Dashboard","My Products","Job Listings","Profile Views","Membership"].map(item => (
-              <li key={item}
+            {Object.keys(icons).map(item => (
+              <li
+                key={item}
                 className={activeMenu === item ? "active" : ""}
-                onClick={()=>setActiveMenu(item)}>
-                {item}
+                onClick={() => setActiveMenu(item)}
+              >
+                <span className="icon">{icons[item]}</span>
+                <span>{item}</span>
               </li>
             ))}
           </ul>
@@ -274,47 +262,23 @@ const SellerDashboard = () => {
 
             <div className="welcome">Welcome, Seller!</div>
             <h2>{activeMenu}</h2>
-
-            <div className="row">
-              <div className="card" onClick={()=>handleClick("Total Products")}>
-                <div>Total Products <br/><b>5</b></div>
-                <div className="icon">📦</div>
-              </div>
-
-              <div className="card" onClick={()=>handleClick("Profile Views")}>
-                <div>Profile Views <br/><b>4</b></div>
-                <div className="icon">👁️</div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="card" onClick={()=>handleClick("Add Product")}>
-                <div>Add Product</div>
-                <div className="icon">➕</div>
-              </div>
-
-              <div className="card" onClick={()=>handleClick("Post Job")}>
-                <div>Post Job</div>
-                <div className="icon">💼</div>
-              </div>
-            </div>
-
-            <div className="buttons">
-              <button className="btn" onClick={()=>handleClick("Add Product Button")}>
-                Add Product
-              </button>
-
-              <button className="btn" onClick={()=>handleClick("Post Job Button")}>
-                Post Job
-              </button>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </>
+<div className="row"> 
+  <div className="card" onClick={()=>handleClick("Total Products")}>
+     <div>Total Products <br/><b>5</b></div>
+      <div className="icon">📦</div> </div> 
+      <div className="card" onClick={()=>handleClick("Profile Views")}> 
+        <div>Profile Views <br/><b>4</b></div> 
+        <div className="icon">👤</div> </div>
+         </div> <div className="row"> <div className="card" onClick={()=>handleClick("Add Product")}>
+           <div>Add Product</div> <div className="icon">➕</div>
+            </div> <div className="card" onClick={()=>handleClick("Post Job")}>
+               <div>Post Job</div> <div className="icon">💼</div> 
+               </div> </div> <div className="buttons">
+                 <button className="btn" onClick={()=>handleClick("Add Product Button")}> Add Product </button>
+                  <button className="btn" onClick={()=>handleClick("Post Job Button")}> Post Job </button> 
+                  </div> </div> </div> </div>
+                   </>
+            
   );
 };
 
