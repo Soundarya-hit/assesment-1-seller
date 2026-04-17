@@ -264,7 +264,7 @@ const SellerDashboard = () => {
             <h2>{activeMenu}</h2>
 <div className="row"> 
   <div className="card" onClick={()=>handleClick("Total Products")}>
-     <div>Total Products <br/><b>5</b></div>
+     <div>Total Products <br/><b>💲</b></div>
       <div className="icon">📦</div> </div> 
       <div className="card" onClick={()=>handleClick("Profile Views")}> 
         <div>Profile Views <br/><b>4</b></div> 
